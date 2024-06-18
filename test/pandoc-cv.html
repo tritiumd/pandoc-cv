@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pandoc-CV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <!-- https://jsfiddle.net/kmq736ut/ -->
+    <style>
+        .A4 {
+            background: white;
+            width: 21cm;
+            height: 29.7cm;
+            display: block;
+            padding: 2cm;
+            margin: 0.5cm auto;
+            box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            box-sizing: border-box;
+            font-size: 12pt !important;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+
+        }
+
+        @media print {
+            .page-break {
+                display: block;
+                page-break-before: always;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .A4 {
+                box-shadow: none;
+                margin: 0;
+                width: auto;
+                height: auto;
+            }
+
+            #data, .noprint {
+                display: none;
+            }
+
+            .enable-print {
+                display: block;
+            }
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin: 3mm;
+        }
+
+        #info > ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 0;
+            gap: 0.75mm
+        }
+
+        #info > ul > li {
+            display: inline;
+            flex-basis: fit-content;
+        }
+
+        p, ul {
+            margin: 2mm 0;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            margin: 3mm 0;
+            padding-bottom: 1mm;
+            padding-left: 1mm;
+            padding-right: 3mm;
+            width: fit-content;
+            border-bottom: #1a1a1a solid 0.75mm;
+        }
+
+        p {
+            text-indent: 14pt;
+            margin-left: 14pt;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            margin-top: 2mm;
+            margin-bottom: 1.5mm;
+        }
+
+        h5, h6 {
+            font-size: 1em;
+            display: inline;
+            margin: 0 0 2mm 14pt;
+        }
+
+        h5 + h6 {
+            display: block;
+            float: right;
+        }
+
+        h5:has(+ h6) {
+            display: block;
+            float: left;
+        }
+
+        h5 + h5:has(+ h5 + h5):after {
+            content: "\A";
+            display: block;
+            margin-bottom: 3mm;
+        }
+
+        h6 + ul {
+            display: inline-block;
+            width: 100%;
+        }
+
+        h6 + ul:before {
+            content: "\A";
+            display: block;
+            margin-top: -2mm;
+        }
+
+        #data {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<input type="button" class="noprint" value="Print / Save PDF" onClick="window.print()" style="position: fixed">
+<div id="data">
+    <!--  Data from here  -->
+    <h1>Phạm Bá Thắng</h1>
+    <h2>Software Engineer</h2>
+    <div id="info">
+        <ul>
+            <li><span class="fa fa-cake-candles"></span> 13/12/2002</li>
+            <li>|</li>
+            <li><span class="fa fa-phone"></span> +84796421201</li>
+            <li>|</li>
+            <li><span class="fa fa-envelope"></span> phambathanghp@gmail.com</li>
+            <li>|</li>
+            <li><span class="fa fab fa-github"></span> blaplafla13th</li>
+        </ul>
+    </div>
+    <h3>Giới thiệu</h3>
+    <p>Là 1 sinh viên chuẩn bị tốt nghiệp lĩnh vực khoa học máy tính, với hơn 2 năm trong lĩnh vực công nghệ thông tin,
+        tôi muốn sử dụng kiến thức cũng như kĩ năng của tôi để có thể phát triển các sản phẩm cho công ty, mang lại giá
+        trị thực tiễn cho công ty cũng như phát triển bản thân và sự nghiệp
+    </p>
+    <h3>Kĩ năng</h3>
+    <ul>
+        <li>Ngôn ngữ: Java, C#, Python, PHP, Javascript, Dart</li>
+        <li>Database: PostgreSQL</li>
+        <li>Object storage: Redis, MINIO</li>
+        <li>DevOps: Docker, NGINX</li>
+        <li>Microsoft Office: Word, Excel, PowerPoint</li>
+        <li>Design: Photoshop, Illustrator, Figma</li>
+        <li>Kỹ năng mềm: Làm việc nhóm, thuyết trình, giải quyết vấn đề, phản biện</li>
+        <li>Tiếng Anh: Dịch tài liệu, viết tài liệu, giao tiếp cơ bản</li>
+    </ul>
+    <h3>Học vấn</h3>
+    <h4>Trường Đại học Khoa học Tự nhiên - Đại học quốc gia Hà Nội</h4>
+    <h5>Khoa học máy tính</h5>
+    <h6>2020-2024</h6>
+    <ul>
+        <li>GPA: 3.1</li>
+    </ul>
+    <h3>Chứng chỉ và giải thưởng</h3>
+    <h5>2020</h5> <h5>Bồi dưỡng thiết kế cán bộ đoàn hội</h5>
+    <h5>2021</h5> <h5>Giải thưởng nghiên cứu khoa học sinh viên</h5>
+    <ul>
+        <li>Đề tài: Một số giải pháp kĩ thuật để tối ưu việc triển khai định tuyến bằng giao thức OSPF</li>
+        <li>Giải ba tiểu ban poster cấp khoa</li>
+    </ul>
+    <h5>2022</h5> <h5>Giải quán quân cuộc thi Simple Science</h5>
+    <h5>2024</h5> <h5>Giải thưởng nghiên cứu khoa học sinh viên</h5>
+    <ul>
+        <li>Đề tài: Áp dụng CNN trong quy trình dự đoán chức năng gen dược CYP2D6</li>
+        <li>Giải nhì tiểu ban tin học cấp khoa</li>
+        <li>Giải ba cấp Đại học khoa học tự nhiên</li>
+    </ul>
+    <div class="page-break"></div>
+    <h3>Kinh nghiệm làm việc</h3>
+    <h4>Wecan-Group</h4>
+    <h5>Intern Fullstack developer</h5><h6>3/2022-9/2022</h6>
+    <ul>
+        <li>Phát triển các template và chức năng cho CMS công ty phát triển bằng Laravel</li>
+        <li>Công nghệ sử dụng: Laravel, Jquery, MySQL</li>
+    </ul>
+    <h4>Cục Ðo đạc, Bản đồ và Thông tin địa lý Việt Nam</h4>
+    <h5>Intern Java Backend Developer</h5><h6>7/2023-9/2023</h6>
+    <ul>
+        <li>Dự án: Chuyển đổi số trong lĩnh vực đất đai ở Việt Nam</li>
+        <li>Công nghệ sử dụng: Java Spring Boot, PosgreSQL, Docker, Redis, MINIO</li>
+        <li>Xây dựng và mở rộng các API trên công nghệ Java Spring Boot</li>
+        <li>Giảm số lượng code giúp dự án dễ bảo trì bằng cách áp dụng các design pattern</li>
+    </ul>
+    <h5>Intern .NET Developer</h5><h6>9/2023-11/2023</h6>
+    <ul>
+        <li>Dự án: Ứng dụng thống kê, kiểm kê đất đai</li>
+        <li>Công nghệ sử dụng: C#, Python, ArcGis, .NET, Airflow, Docker, SQLite</li>
+        <li>Nghiên cứu, phân tích và viết tài liệu ETL sử dụng Airflow</li>
+        <li>Đọc dữ liệu bản đồ MicroStation bằng ArcMap</li>
+        <li>Tham gia vào quá trình xây dựng và mở rộng ứng dụng bản đồ địa lý Việt Nam bằng ArcGis</li>
+    </ul>
+    <h4>Dự án cá nhân</h4>
+    <h5>Laravel Backend Developer</h5><h6>7/2023-9/2023</h6>
+    <ul>
+        <li>Dự án: Ứng dụng điểm danh cho giám thị</li>
+        <li>Công nghệ sử dụng: Laravel, Python, Redis</li>
+        <li>Nhập danh sách lịch thi qua pytho</li>
+        <li>Điểm danh giám thị bằng QR và phân phòng ngẫu nhiên</li>
+        <li>Thống kê các lần điểm danh của giám thị</li>
+        <li>Github: https://github.com/blaplafla13th/phongdaotao_2</li>
+    </ul>
+    <h5>Khóa luận tốt nghiệp</h5><h6>4/2024</h6>
+    <ul>
+        <li>Sử dụng học tăng cường để dự đoán liệu dùng thuốc Warfarin cho bệnh nhân qua các dữ liệu lâm sàng và gen
+            dược
+        </li>
+    </ul>
+    <h3>Hoạt động ngoại khóa</h3>
+    <h4>MIM MEDIA</h4>
+    <h5>Ban kĩ thuật</h5><h6>2020-2021</h6>
+    <ul>
+        <li>Thiết kế banner, poster cho các sự kiện của khoa</li>
+    </ul>
+    <h3>Tham chiếu</h3>
+    <h4>PGS.TS Nguyễn Thị Hồng Minh</h4>
+    <h5>Trưởng Phòng Đào tạo trường Đại học Khoa học Tự nhiên</h5>
+    <ul>
+        <li><span class="fa fa-phone"></span> +840000000000</li>
+        <li><span class="fa fa-envelope"></span> example@example.com</li>
+    </ul>
+    <!--  Data end here  -->
+</div>
+</body>
+<footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const data = $("#data")
+            function load() {
+                let temp_a4 = $('<div class="A4"></div>')
+                data.after(temp_a4)
+                let elements = data.children();
+                for (let i = 0; i < elements.length; i++) {
+                    let new_element = $(elements[i]).clone()
+                    temp_a4.append(new_element)
+                    if ($(new_element).is("ul,ol")) {
+                        temp_a4.children().last().remove()
+                        let lis = new_element.children()
+                        let j = 0
+                        tag = $(new_element).prop("tagName")
+                        while (j<lis.length){
+                            let new_list = $(`<${tag}></${tag}>`)
+                            temp_a4.append(new_list)
+                            while (
+                                $(temp_a4)[0].scrollHeight - Math.ceil($(temp_a4).innerHeight()) <= 0
+                                && j < lis.length){
+                                new_list.append(lis[j])
+                                j++
+                            }
+                            if (j < lis.length){
+                                j--
+                                new_list.children().last().remove()
+                                let temp_a4_t = $('<div class="A4"></div>')
+                                temp_a4.after(temp_a4_t)
+                                temp_a4 = temp_a4_t
+                            }
+                        }
+                    }
+                    else if ($(elements[i]).hasClass("page-break") ||
+                        $(temp_a4)[0].scrollHeight - Math.ceil($(temp_a4).innerHeight()) > 0
+                    ) {
+                        let temp_a4_t = $('<div class="A4"></div>')
+                        temp_a4.after(temp_a4_t)
+                        temp_a4 = temp_a4_t
+                        temp_a4.append(new_element)
+                    }
+                }
+            }
+
+            load()
+            data.on('DOMSubtreeModified', function () {
+                $(".A4").remove();
+                load()
+            })
+        });
+
+    </script>
+</footer>
+</html>
