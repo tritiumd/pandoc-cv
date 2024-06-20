@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Pandoc-CV</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="font" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
     <!-- https://jsfiddle.net/kmq736ut/ -->
     <style>
         .A4 {
@@ -16,7 +18,9 @@
             box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
             overflow: hidden;
             box-sizing: border-box;
-            font-size: 12pt !important;
+            font-size: 11pt !important;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 500;
         }
 
         @page {
@@ -57,6 +61,14 @@
             margin: 3mm;
         }
 
+        h1 {
+            font-size: 1.5em !important;
+        }
+
+        h2 {
+            font-size: 1.25em !important;
+        }
+
         #info > ul {
             list-style: none;
             display: flex;
@@ -78,7 +90,7 @@
         }
 
         h3 {
-            font-size: 1.5em;
+            font-size: 1.2em !important;
             margin: 3mm 0;
             padding-bottom: 1mm;
             padding-left: 1mm;
@@ -95,15 +107,15 @@
         }
 
         h4 {
-            font-size: 1.1em;
+            font-size: 1.1em !important;
             margin-top: 2mm;
             margin-bottom: 1.5mm;
         }
 
         h5, h6 {
-            font-size: 1em;
+            font-size: 1em !important;
             display: inline;
-            margin: 0 0 2mm 14pt;
+            margin: 0 0 1mm 14pt;
         }
 
         h5 + h6 {
@@ -124,7 +136,7 @@
 
         h6 + ul {
             display: inline-block;
-            width: 100%;
+            width: 95%;
         }
 
         h6 + ul:before {
@@ -137,6 +149,7 @@
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 </head>
 <body>
 <input type="button" class="noprint" value="Print / Save PDF" onClick="window.print()" style="position: fixed">
@@ -192,7 +205,7 @@
         <li>Giải nhì tiểu ban tin học cấp khoa</li>
         <li>Giải ba cấp Đại học khoa học tự nhiên</li>
     </ul>
-    <div class="page-break"></div>
+    <!--    <div class="page-break"></div>-->
     <h3>Kinh nghiệm làm việc</h3>
     <h4>Wecan-Group</h4>
     <h5>Intern Fullstack developer</h5><h6>3/2022-9/2022</h6>
@@ -253,54 +266,68 @@
     <script>
         $(document).ready(function () {
             const data = $("#data")
+
             function load() {
-                let temp_a4 = $('<div class="A4"></div>')
+                temp_a4 = $('<div class="A4"></div>')
                 data.after(temp_a4)
-                let elements = data.children();
-                for (let i = 0; i < elements.length; i++) {
-                    let new_element = $(elements[i]).clone()
+                content_height = 0
+                h56 = 0
+                const content_area = $(temp_a4).height()
+                elements = data.children();
+                for (i = 0; i < elements.length; i++) {
+                    new_element = $(elements[i]).clone()
                     temp_a4.append(new_element)
-                    if ($(new_element).is("ul,ol")) {
-                        temp_a4.children().last().remove()
-                        let lis = new_element.children()
-                        let j = 0
-                        tag = $(new_element).prop("tagName")
-                        while (j<lis.length){
-                            let new_list = $(`<${tag}></${tag}>`)
+                    if ($(new_element).is("h5,h6")) {
+                        h56++
+                    }
+                    if (h56 !== 2) {
+                        content_height += $(new_element).outerHeight(true)
+                    } else {
+                        h56 = 0
+                    }
+                    bottom_margin = parseFloat($(elements[i])) ? parseFloat($(elements[i])) : 0
+                    if ($(elements[i]).hasClass("page-break") ||
+                        content_height - bottom_margin > content_area
+                    ) {
+                        if ($(new_element).is("ul,ol")) {
+                            content_height -= $(new_element).outerHeight(true)
+                            temp_a4.children().last().remove()
+                            lis = new_element.children()
+                            j = 0
+                            tag = $(new_element).prop("tagName")
+                            new_list = $(`<${tag}></${tag}>`)
                             temp_a4.append(new_list)
-                            while (
-                                $(temp_a4)[0].scrollHeight - Math.ceil($(temp_a4).innerHeight()) <= 0
-                                && j < lis.length){
+                            while (j < lis.length) {
                                 new_list.append(lis[j])
+                                content_height += $(lis[j]).outerHeight(true)
+                                bottom_margin = parseFloat(lis[j]) ? parseFloat(lis[j]) : 0
+                                if (content_height - bottom_margin > content_area) {
+                                    new_list.children().last().remove()
+                                    temp_a4_t = $('<div class="A4"></div>')
+                                    temp_a4.after(temp_a4_t)
+                                    temp_a4 = temp_a4_t
+                                    temp_a4.append($('<div class="page-break"></div>'))
+                                    content_height = 0
+                                    j--
+                                    new_list = $(`<${tag}></${tag}>`)
+                                    temp_a4.append(new_list)
+                                }
                                 j++
                             }
-                            if (j < lis.length){
-                                j--
-                                new_list.children().last().remove()
-                                let temp_a4_t = $('<div class="A4"></div>')
-                                temp_a4.after(temp_a4_t)
-                                temp_a4 = temp_a4_t
-                            }
+                        } else {
+                            temp_a4_t = $('<div class="A4"></div>')
+                            temp_a4.after(temp_a4_t)
+                            temp_a4 = temp_a4_t
+                            if (!$(elements[i]).hasClass("page-break"))
+                                temp_a4.append($('<div class="page-break"></div>'))
+                            temp_a4.append(new_element)
+                            content_height = $(new_element).outerHeight(true)
                         }
-                    }
-                    else if ($(elements[i]).hasClass("page-break") ||
-                        $(temp_a4)[0].scrollHeight - Math.ceil($(temp_a4).innerHeight()) > 0
-                    ) {
-                        let temp_a4_t = $('<div class="A4"></div>')
-                        temp_a4.after(temp_a4_t)
-                        temp_a4 = temp_a4_t
-                        temp_a4.append(new_element)
                     }
                 }
             }
-
             load()
-            data.on('DOMSubtreeModified', function () {
-                $(".A4").remove();
-                load()
-            })
         });
-
     </script>
 </footer>
 </html>

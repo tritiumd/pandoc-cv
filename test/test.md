@@ -69,8 +69,6 @@ bằng giao thức OSPF
 - Giải nhì tiểu ban tin học cấp khoa
 - Giải ba cấp Đại học khoa học tự nhiên
 
-::: page-break
-:::
 
 ### Kinh nghiệm làm việc
 
@@ -145,5 +143,5 @@ nhân qua các dữ liệu lâm sàng và gen dược
 
 ##### Trưởng Phòng Đào tạo trường Đại học Khoa học Tự nhiên
 
-- []{.fa .fa-phone} 8400000000
+- []{.fa .fa-phone} +8400000000
 - []{.fa .fa-envelope} example@example.com
