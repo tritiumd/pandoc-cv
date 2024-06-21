@@ -1,0 +1,45 @@
+name: Your name
+position: Appling Position
+info: # icon from FontAwesome 6 Free
+  - icon: fa-cake-candles
+    data: Your date of birth
+  - icon: fa-phone
+    data: Your phone number
+  - icon: fa-envelope
+    data: Your email
+summary: Your summary
+skill:
+  - Your skill. If you want to use colon write like this
+  - "Soft skill: Solving Problem"
+certificate:
+  - year: 2020
+    name: Certificate without extra
+  - year: 2021
+    name: Certificate with extra
+    extra:
+      - "Write Like skill part with colon. Duplicate if you get more"
+education:
+  - place: Your Institute
+    major: Your Major
+    time: 2020-2024
+    extra:
+      - "Write Like skill part with colon. Duplicate if you get more"
+experiment:
+  - place: Your company in past
+    phase:
+      - time: Worked time
+        position: Position in Past
+        detail:
+          - "Write Like skill part with colon. Duplicate if you get more"
+activity:
+  - place: Your group in past
+    phase:
+      - time: Time you in club
+        position: Your postion
+        detail:
+          - "Write Like skill part with colon. Duplicate if you get more"
+reference:
+  - name: Your Reference Person
+    position: His/Her Jobs
+    phone: His/Her Phone Number
+    email: His/Her Email
