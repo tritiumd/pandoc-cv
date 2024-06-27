@@ -1,1 +1,0 @@
- docker run --rm --user `id -u`:`id -g` -v .:/workspace ngocptblaplafla/pandoc-texlive-full:latest --metadata-file vnframe.yaml --template pandoc-cv.markdown -o test.md
