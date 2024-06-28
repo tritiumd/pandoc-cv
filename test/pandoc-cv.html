@@ -5,7 +5,8 @@
     <title>Pandoc-CV</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="font" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
     <!-- https://jsfiddle.net/kmq736ut/ -->
     <style>
         .A4 {
@@ -13,7 +14,7 @@
             width: 21cm;
             height: 29.7cm;
             display: block;
-            padding: 2cm;
+            padding: 1.5cm;
             margin: 0.5cm auto;
             box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
             overflow: hidden;
@@ -26,7 +27,6 @@
         @page {
             size: A4;
             margin: 0;
-
         }
 
         @media print {
@@ -103,7 +103,7 @@
             text-indent: 14pt;
             margin-left: 14pt;
             text-align: justify;
-            text-justify: inter-word;
+            overflow: hidden;
         }
 
         h4 {
@@ -128,31 +128,33 @@
             float: left;
         }
 
+        h5 + h6 + * {
+            display: inline-block;
+            width: 97%;
+            margin-top: 0;
+        }
+
         h5 + h5:has(+ h5 + h5):after {
             content: "\A";
             display: block;
             margin-bottom: 3mm;
         }
 
-        h6 + ul {
-            display: inline-block;
-            width: 95%;
-        }
-
-        h6 + ul:before {
-            content: "\A";
-            display: block;
-            margin-top: -2mm;
-        }
-
         #data {
             display: none;
+        }
+
+        .container{
+            overflow: hidden;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 </head>
 <body>
-<input type="button" class="noprint" value="Print / Save PDF" onClick="window.print()" style="position: fixed">
+<div class="noprint" style="position: fixed">
+    <input type="button" value="Print / Save PDF" onClick="window.print()">
+    <input type="button" value="Rerender" id="rerender">
+</div>
 <div id="data">
     <!--  Data from here  -->
     <h1>Phạm Bá Thắng</h1>
@@ -205,7 +207,7 @@
         <li>Giải nhì tiểu ban tin học cấp khoa</li>
         <li>Giải ba cấp Đại học khoa học tự nhiên</li>
     </ul>
-    <!--    <div class="page-break"></div>-->
+<!--        <div class="page-break"></div>-->
     <h3>Kinh nghiệm làm việc</h3>
     <h4>Wecan-Group</h4>
     <h5>Intern Fullstack developer</h5><h6>3/2022-9/2022</h6>
@@ -260,73 +262,90 @@
     </ul>
     <!--  Data end here  -->
 </div>
+<div id="rendered"></div>
 </body>
 <footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            const data = $("#data")
-
+            const data = $("#data");
+            const rendered = $("#rendered");
+            function new_page(temp_a4){
+                let container;
+                if (temp_a4 == null) {
+                    temp_a4 = $('<div class="A4"></div>');
+                    container = $('<div></div>');
+                    temp_a4.append(container);
+                }
+                else {
+                    temp_a4_t = $('<div class="A4"></div>');
+                    temp_a4.after(temp_a4_t);
+                    temp_a4 = temp_a4_t;
+                    temp_a4.append($('<div class="page-break"></div>'));
+                    container = $('<div class="container"></div>');
+                    temp_a4.append(container);
+                }
+                return [temp_a4, container];
+            }
             function load() {
-                temp_a4 = $('<div class="A4"></div>')
-                data.after(temp_a4)
-                content_height = 0
-                h56 = 0
-                const content_area = $(temp_a4).height()
-                elements = data.children();
-                for (i = 0; i < elements.length; i++) {
-                    new_element = $(elements[i]).clone()
-                    temp_a4.append(new_element)
-                    if ($(new_element).is("h5,h6")) {
-                        h56++
+                let temp_a4, container;
+                [temp_a4, container] = new_page(null);
+                rendered.append(temp_a4);
+                const content_area = $(temp_a4).height();
+                let elements = data.children();
+                for (let i = 0; i < elements.length; i++) {
+                    let new_element = $(elements[i]).clone();
+                    container.append(new_element);
+                    if ($(elements[i]).hasClass("page-break")){
+                        container.children().last().remove();
+                        [temp_a4, container] = new_page(temp_a4);
                     }
-                    if (h56 !== 2) {
-                        content_height += $(new_element).outerHeight(true)
-                    } else {
-                        h56 = 0
-                    }
-                    bottom_margin = parseFloat($(elements[i])) ? parseFloat($(elements[i])) : 0
-                    if ($(elements[i]).hasClass("page-break") ||
-                        content_height - bottom_margin > content_area
-                    ) {
+                    else if (container.height() > content_area) {
                         if ($(new_element).is("ul,ol")) {
-                            content_height -= $(new_element).outerHeight(true)
-                            temp_a4.children().last().remove()
-                            lis = new_element.children()
-                            j = 0
-                            tag = $(new_element).prop("tagName")
-                            new_list = $(`<${tag}></${tag}>`)
-                            temp_a4.append(new_list)
+                            container.children().last().remove();
+                            let lis = new_element.children();
+                            let j = 0;
+                            let tag = $(new_element).prop("tagName");
+                            let new_list = $(`<${tag}></${tag}>`);
+                            container.append(new_list);
                             while (j < lis.length) {
-                                new_list.append(lis[j])
-                                content_height += $(lis[j]).outerHeight(true)
-                                bottom_margin = parseFloat(lis[j]) ? parseFloat(lis[j]) : 0
-                                if (content_height - bottom_margin > content_area) {
-                                    new_list.children().last().remove()
-                                    temp_a4_t = $('<div class="A4"></div>')
-                                    temp_a4.after(temp_a4_t)
-                                    temp_a4 = temp_a4_t
-                                    temp_a4.append($('<div class="page-break"></div>'))
-                                    content_height = 0
-                                    j--
-                                    new_list = $(`<${tag}></${tag}>`)
-                                    temp_a4.append(new_list)
+                                new_list.append(lis[j]);
+                                if (container.height() > content_area) {
+                                    new_list.children().last().remove();
+                                    [temp_a4, container] = new_page(temp_a4);
+                                    j--;
+                                    new_list = $(`<${tag}></${tag}>`);
+                                    container.append(new_list);
                                 }
-                                j++
+                                j++;
                             }
+                        } else if ($(new_element).is("p")) {
+                            let true_height = $(new_element).outerHeight(true);
+                            let line_height = 1.5 * parseFloat($(new_element).css('font-size'));
+                            let prev_height = true_height + Math.floor((content_area - container.height())
+                                    / line_height) * line_height;
+                            $(new_element).css("height", prev_height + "px");
+                            [temp_a4, container] = new_page(temp_a4);
+                            let bottom_p = $(new_element).clone()
+                            container.append(bottom_p)
+                            bottom_p.css("margin-top",(-prev_height)+"px")
+                            bottom_p.css("height","")
+                            bottom_p.css("width",$(new_element).width())
+
                         } else {
-                            temp_a4_t = $('<div class="A4"></div>')
-                            temp_a4.after(temp_a4_t)
-                            temp_a4 = temp_a4_t
-                            if (!$(elements[i]).hasClass("page-break"))
-                                temp_a4.append($('<div class="page-break"></div>'))
-                            temp_a4.append(new_element)
-                            content_height = $(new_element).outerHeight(true)
+                            [temp_a4, container] = new_page(temp_a4);
+                            container.append(new_element);
                         }
                     }
                 }
+                $(".A4 div h5 + h6 + *").before("<br>")
             }
-            load()
+
+            load();
+            $("#rerender").on("click", function () {
+                rendered.html("");
+                load();
+            })
         });
     </script>
 </footer>

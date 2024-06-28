@@ -5,154 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Pandoc-CV</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="preload" as="font" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-      <!-- https://jsfiddle.net/kmq736ut/ -->
-      <style>
-          .A4 {
-              background: white;
-              width: 21cm;
-              height: 29.7cm;
-              display: block;
-              padding: 2cm;
-              margin: 0.5cm auto;
-              box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
-              overflow: hidden;
-              box-sizing: border-box;
-              font-size: 11pt !important;
-              font-family: "Montserrat", sans-serif;
-              font-weight: 500;
-          }
-
-          @page {
-              size: A4;
-              margin: 0;
-
-          }
-
-          @media print {
-              .page-break {
-                  display: block;
-                  page-break-before: always;
-              }
-
-              body {
-                  margin: 0;
-                  padding: 0;
-              }
-
-              .A4 {
-                  box-shadow: none;
-                  margin: 0;
-                  width: auto;
-                  height: auto;
-              }
-
-              #data, .noprint {
-                  display: none;
-              }
-
-              .enable-print {
-                  display: block;
-              }
-          }
-
-          h1, h2 {
-              text-align: center;
-              margin: 3mm;
-          }
-
-          h1 {
-              font-size: 1.5em !important;
-          }
-
-          h2 {
-              font-size: 1.25em !important;
-          }
-
-          #info > ul {
-              list-style: none;
-              display: flex;
-              align-items: center;
-              justify-content: space-around;
-              flex-wrap: wrap;
-              width: 100%;
-              padding: 0;
-              gap: 0.75mm
-          }
-
-          #info > ul > li {
-              display: inline;
-              flex-basis: fit-content;
-          }
-
-          p, ul {
-              margin: 2mm 0;
-          }
-
-          h3 {
-              font-size: 1.2em !important;
-              margin: 3mm 0;
-              padding-bottom: 1mm;
-              padding-left: 1mm;
-              padding-right: 3mm;
-              width: fit-content;
-              border-bottom: #1a1a1a solid 0.75mm;
-          }
-
-          p {
-              text-indent: 14pt;
-              margin-left: 14pt;
-              text-align: justify;
-              text-justify: inter-word;
-          }
-
-          h4 {
-              font-size: 1.1em !important;
-              margin-top: 2mm;
-              margin-bottom: 1.5mm;
-          }
-
-          h5, h6 {
-              font-size: 1em !important;
-              display: inline;
-              margin: 0 0 1mm 14pt;
-          }
-
-          h5 + h6 {
-              display: block;
-              float: right;
-          }
-
-          h5:has(+ h6) {
-              display: block;
-              float: left;
-          }
-
-          h5 + h5:has(+ h5 + h5):after {
-              content: "\A";
-              display: block;
-              margin-bottom: 3mm;
-          }
-
-          h6 + ul {
-              display: inline-block;
-              width: 95%;
-          }
-
-          h6 + ul:before {
-              content: "\A";
-              display: block;
-              margin-top: -2mm;
-          }
-
-          #data {
-              display: none;
-          }
-      </style>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <style>
+  $support_header$
     $for(style)$
         $style$
     $endfor$
@@ -168,82 +21,20 @@ $endfor$
 $for(include-before)$
 $include-before$
 $endfor$
-<input type="button" class="noprint" value="Print / Save PDF" onClick="window.print()" style="position: fixed">
+<div class="noprint" style="position: fixed">
+    <input type="button" value="Print / Save PDF" onClick="window.print()">
+    <input type="button" value="Rerender" id="rerender">
+</div>
 <div id="data">
 $body$
 </div>
+<div id="rendered"></div>
 $for(include-after)$
 $include-after$
 $endfor$
 </body>
 <footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        $$(document).ready(function () {
-            const data = $$("#data")
-
-            function load() {
-                temp_a4 = $$('<div class="A4"></div>')
-                data.after(temp_a4)
-                content_height = 0
-                h56 = 0
-                const content_area = $$(temp_a4).height()
-                elements = data.children();
-                for (i = 0; i < elements.length; i++) {
-                    new_element = $$(elements[i]).clone()
-                    temp_a4.append(new_element)
-                    if ($$(new_element).is("h5,h6")) {
-                        h56++
-                    }
-                    if (h56 !== 2) {
-                        content_height += $$(new_element).outerHeight(true)
-                    } else {
-                        h56 = 0
-                    }
-                    bottom_margin = parseFloat($$(elements[i])) ? parseFloat($$(elements[i])) : 0
-                    if ($$(elements[i]).hasClass("page-break") ||
-                        content_height - bottom_margin > content_area
-                    ) {
-                        if ($$(new_element).is("ul,ol")) {
-                            content_height -= $$(new_element).outerHeight(true)
-                            temp_a4.children().last().remove()
-                            lis = new_element.children()
-                            j = 0
-                            tag = $$(new_element).prop("tagName")
-                            new_list = $$(`<$${tag}></$${tag}>`)
-                            temp_a4.append(new_list)
-                            while (j < lis.length) {
-                                new_list.append(lis[j])
-                                content_height += $$(lis[j]).outerHeight(true)
-                                bottom_margin = parseFloat(lis[j]) ? parseFloat(lis[j]) : 0
-                                if (content_height - bottom_margin > content_area) {
-                                    new_list.children().last().remove()
-                                    temp_a4_t = $$('<div class="A4"></div>')
-                                    temp_a4.after(temp_a4_t)
-                                    temp_a4 = temp_a4_t
-                                    temp_a4.append($$('<div class="page-break"></div>'))
-                                    content_height = 0
-                                    j--
-                                    new_list = $$(`<$${tag}></$${tag}>`)
-                                    temp_a4.append(new_list)
-                                }
-                                j++
-                            }
-                        } else {
-                            temp_a4_t = $$('<div class="A4"></div>')
-                            temp_a4.after(temp_a4_t)
-                            temp_a4 = temp_a4_t
-                            if (!$$(elements[i]).hasClass("page-break"))
-                                temp_a4.append($$('<div class="page-break"></div>'))
-                            temp_a4.append(new_element)
-                            content_height = $$(new_element).outerHeight(true)
-                        }
-                    }
-                }
-            }
-            load()
-        });
-    </script>
+    $support_footer$
     <script>
     $for(script)$
         $script$
