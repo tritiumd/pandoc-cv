@@ -21,14 +21,18 @@ $endfor$
 $for(include-before)$
 $include-before$
 $endfor$
-<div class="noprint" style="position: fixed">
+<div id="support-bar" class="noprint" style="position: fixed">
     <input type="button" value="Print / Save PDF" onClick="window.print()">
     <input type="button" value="Rerender" id="rerender">
 </div>
 <div id="data">
 $body$
 </div>
-<div id="rendered"></div>
+<div id="rendered" style="font-size: 11pt !important;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    line-height: 1.25;
+"></div>
 $for(include-after)$
 $include-after$
 $endfor$
