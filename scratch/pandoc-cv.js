@@ -1,147 +1,3 @@
-function Meta(meta)
-    support_header = [[
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style"
-          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-<!-- https://jsfiddle.net/kmq736ut/ -->
-<style>
-/* Thank ngocptblaplafla for helping me css */
-h1, h2 {
-    text-align: center;
-    margin: 3mm;
-}
-
-h1 {
-    font-size: 1.5em !important;
-}
-
-h2 {
-    font-size: 1.25em !important;
-}
-
-h3 {
-    font-size: 1.2em !important;
-    margin: 3mm 0;
-    padding-bottom: 1mm;
-    padding-left: 1mm;
-    padding-right: 3mm;
-    width: fit-content;
-    border-bottom: #1a1a1a solid 0.75mm;
-}
-
-h4 {
-    font-size: 1.1em !important;
-    margin-top: 2mm;
-    margin-bottom: 1.5mm;
-}
-
-h5, h6 {
-    font-size: 1em !important;
-    display: block;
-    margin: 0 0 1mm 14pt;
-    float: left;
-}
-
-h6 {
-    float: right;
-    text-align: right;
-}
-
-#data {
-    display: none;
-    width: 21cm;
-}
-
-p, ul, ol, div {
-    overflow: hidden;
-    width: 97%;
-}
-
-p {
-    text-indent: 14pt;
-    margin: 2mm 0 2mm 14pt;
-    text-align: justify;
-}
-
-ul {
-    margin: 2mm 0;
-}
-
-#info > ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 0;
-    gap: 0.75mm
-}
-
-#info > ul > li {
-    display: inline;
-    flex-basis: fit-content;
-}
-
-.A4 {
-    background: white;
-    width: 21cm;
-    height: 29.7cm;
-    display: block;
-    padding: 1.5cm;
-    margin: 0.5cm auto;
-    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.container {
-    width: 100%;
-}
-
-h5 + h5 + div {
-    height: 1mm;
-}
-
-@page {
-    size: A4;
-    margin: 0;
-}
-
-@media print {
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .A4 {
-        box-shadow: none;
-        margin: 0;
-        width: auto;
-        height: auto;
-    }
-
-    .page-break {
-        display: block;
-        page-break-before: always;
-    }
-
-    #data, .noprint {
-        display: none;
-    }
-
-    .enable-print {
-        display: block;
-    }
-}
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    ]]
-    meta.support_header = pandoc.RawBlock("html",support_header)
-    support_footer = [[
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
 $(document).ready(function () {
     const data = $("#data");
     const rendered = $("#rendered");
@@ -199,7 +55,7 @@ $(document).ready(function () {
                             if (line_start+printed_line<line_end){
                                 printed_line -=1
                             }
-                            line_start += printed_line
+                            line_start += printed_line                            
                         }
                     }
 
@@ -214,7 +70,7 @@ $(document).ready(function () {
     const render_html = function () {
         rendered.html("");
         load();
-        $(".container h5 + h5:has(+ h5 + h5),.container h5 + h6").after("<div></div>");
+        $(".container h5 + h5:has(+ h5 + h5),.container h5 + h6").after("<div class='hbreak'></div>");
     }
     render_html()
     $("#rerender").on("click", render_html);
@@ -231,8 +87,3 @@ $(document).ready(function () {
         });
     })
 });
-</script>
-    ]]
-    meta.support_footer = pandoc.RawBlock("html",support_footer)
-    return meta
-end
