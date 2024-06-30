@@ -76,6 +76,10 @@ ul {
     flex-basis: fit-content;
 }
 
+h5 + h5 + div {
+    height: 1mm;
+}
+
 .A4 {
     background: white;
     width: 21cm;
@@ -92,9 +96,6 @@ ul {
     width: 100%;
 }
 
-h5 + h5 + div {
-    height: 1mm;
-}
 
 @page {
     size: A4;
@@ -116,7 +117,7 @@ h5 + h5 + div {
 
     .page-break {
         display: block;
-        page-break-before: always;
+        break-after: page;
     }
 
     #data, .noprint {
@@ -125,5 +126,16 @@ h5 + h5 + div {
 
     .enable-print {
         display: block;
+    }
+}
+
+@-moz-document url-prefix() {
+    @page {
+        margin: 1.5cm;;
+    }
+    @media print {
+        .A4 {
+            padding: 0;
+        }
     }
 }

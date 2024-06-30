@@ -24,12 +24,10 @@ docker run --rm -v .:/workspace ngocptblaplafla/pandoc-texlive-full:latest pando
 Ta thu được file `pandoc-cv.html`  
 **Bước 5**: Mở `pandoc-cv.html` để xem. Khuyến nghị sử dụng trình duyệt Chrome. Giao diện sẽ có nút `Print / Save PDF` để in hoặc lưu PDF và nút `Rerender` để tải lại trong trường hợp font bị lỗi
 
-Trong trường hợp không có Chrome hoặc các trình duyệt dùng nhân Chromium (**tức chỉ có Safari hoặc Firefox[^1]**) thì trong image đã có sẵn Chrome cho chúng ta dùng. Sử dụng lệnh sau để lấy file PDF
-
-[^1]: Do tính tương thích của trình duyệt, Safari và Firefox chưa hỗ trợ các tính năng [CSS: break-after](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) của template.
+Trong trường hợp không có Chrome, Firefox hoặc các trình duyệt dùng nhân Chromium, Firefox để xuất pdf (**ví dụ Safari hoặc Microsoft Egde trên MacOS**) thì trong image đã có sẵn Chrome cho chúng ta dùng. Sử dụng lệnh sau để lấy file PDF
 
 ```bash
- docker run --rm -v .:/workspace --entrypoint chromium ngocptblaplafla/pandoc-texlive-full:latest  --headless --no-sandbox --print-to-pdf=pandoc-cv.pdf pandoc-cv.html
+ docker run --rm -v .:/workspace --entrypoint chromium ngocptblaplafla/pandoc-texlive-full:latest  --headless --no-sandbox --run-all-compositor-stages-before-draw --virtual-time-budget=10000 --print-to-pdf=pandoc-cv.pdf pandoc-cv.html
 ```
 
 **Lưu ý:** Đối với Linux, nếu bị lỗi quyền đọc ghi khi sử dụng docker hãy đoạn sau vào sau `docker run`

@@ -2,7 +2,7 @@ function Meta(meta)
     support_header = [[
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style"
+<link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
 <!-- https://jsfiddle.net/kmq736ut/ -->
 <style>
@@ -84,6 +84,10 @@ ul {
     flex-basis: fit-content;
 }
 
+h5 + h5 + div {
+    height: 1mm;
+}
+
 .A4 {
     background: white;
     width: 21cm;
@@ -98,10 +102,6 @@ ul {
 
 .container {
     width: 100%;
-}
-
-h5 + h5 + div {
-    height: 1mm;
 }
 
 @page {
@@ -124,7 +124,7 @@ h5 + h5 + div {
 
     .page-break {
         display: block;
-        page-break-before: always;
+        break-after: page;
     }
 
     #data, .noprint {
@@ -133,6 +133,17 @@ h5 + h5 + div {
 
     .enable-print {
         display: block;
+    }
+}
+
+@-moz-document url-prefix() {
+    @page {
+        margin: 1.5cm;;
+    }
+    @media print {
+        .A4 {
+            padding: 0;
+        }
     }
 }
 </style>
@@ -152,10 +163,10 @@ $(document).ready(function () {
             temp_a4 = $('<div class="A4"></div>');
             temp_a4.append(container);
         } else {
+            temp_a4.append($('<div class="page-break"></div>'));
             temp_a4_t = $('<div class="A4"></div>');
             temp_a4.after(temp_a4_t);
             temp_a4 = temp_a4_t;
-            temp_a4.append($('<div class="page-break"></div>'));
             temp_a4.append(container);
         }
         return [temp_a4, container];
@@ -169,9 +180,17 @@ $(document).ready(function () {
         const content_area = $(temp_a4).height() - 0.25 * parseFloat($(temp_a4).css("padding-bottom"));
         const line_per_page = content_area / line_height;
         let elements = data.children();
+        let float = 0
         for (let i = 0; i < elements.length; i++) {
             let new_element = $(elements[i]).clone();
             container.append(new_element);
+            if ($(elements[i]).css("float") !== "none") {
+                float += 1;
+            }
+            if (float === 2) {
+                float = 0;
+                container.append($("<div></div>"))
+            }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
                 [temp_a4, container] = new_page(temp_a4);
@@ -194,15 +213,14 @@ $(document).ready(function () {
                             container.append(bottom_part);
                             bottom_part.css("margin-top", (-line_start * line_height) + "px");
                             bottom_part.css("height", "");
-                            bottom_part.css("max-height", (Math.ceil(line_start +  line_per_page)*line_height) + "px");
+                            bottom_part.css("max-height", (Math.ceil(line_start + line_per_page) * line_height) + "px");
                             let printed_line = Math.ceil($(bottom_part).outerHeight(true) / line_height);
-                            if (line_start+printed_line<line_end){
-                                printed_line -=1
+                            if (line_start + printed_line < line_end) {
+                                printed_line -= 1
                             }
                             line_start += printed_line
                         }
                     }
-
                 } else {
                     [temp_a4, container] = new_page(temp_a4);
                     container.append(new_element);
@@ -213,8 +231,14 @@ $(document).ready(function () {
 
     const render_html = function () {
         rendered.html("");
-        load();
-        $(".container h5 + h5:has(+ h5 + h5),.container h5 + h6").after("<div></div>");
+        // https://css-tricks.com/the-best-font-loading-strategies-and-how-to-execute-them/#aa-fout-vs-fout-with-class
+        let font_waiting =  rendered.css("font-weight") + " " + rendered.css("font-size")
+            + " " + rendered.css("font-family")
+        Promise.all([
+            document.fonts.load(font_waiting),
+            document.fonts.load("14pt 'Font Awesome 6 Free'"),
+            document.fonts.load("14pt 'Font Awesome 6 Brands'"),
+        ]).then(load);
     }
     render_html()
     $("#rerender").on("click", render_html);
