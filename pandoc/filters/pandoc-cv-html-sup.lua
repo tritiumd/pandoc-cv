@@ -64,8 +64,12 @@ p {
     text-align: justify;
 }
 
-ul {
+ul,ol {
     margin: 2mm 0;
+}
+
+li {
+    width: inherit;
 }
 
 #info > ul {
@@ -93,7 +97,6 @@ h5 + h5 + div {
     width: 21cm;
     height: 29.7cm;
     display: block;
-    padding: 1.5cm;
     margin: 0.5cm auto;
     box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     overflow: hidden;
@@ -103,6 +106,7 @@ h5 + h5 + div {
 .container {
     width: 100%;
 }
+
 
 @page {
     size: A4;
@@ -133,17 +137,6 @@ h5 + h5 + div {
 
     .enable-print {
         display: block;
-    }
-}
-
-@-moz-document url-prefix() {
-    @page {
-        margin: 1.5cm;;
-    }
-    @media print {
-        .A4 {
-            padding: 0;
-        }
     }
 }
 </style>
@@ -227,6 +220,24 @@ $(document).ready(function () {
                 }
             }
         }
+        if (navigator.userAgent.indexOf("Firefox") !== -1){
+            let margin = $(".A4").css("padding");
+            $("#printing-support").html(`
+            .A4 {
+                padding: ${margin};
+            }
+            @-moz-document url-prefix() {
+                @page {
+                    margin: ${margin};
+                }
+                @media print {
+                    .A4 {
+                        padding: 0;
+                    }
+                }
+            }
+            `)
+        }
     }
 
     const render_html = function () {
@@ -239,7 +250,8 @@ $(document).ready(function () {
             document.fonts.load("14pt 'Font Awesome 6 Free'"),
             document.fonts.load("14pt 'Font Awesome 6 Brands'"),
         ]).then(load);
-    }
+    }    
+    
     render_html()
     $("#rerender").on("click", render_html);
     const observer = new MutationObserver(render_html);
@@ -253,10 +265,11 @@ $(document).ready(function () {
             attributes: true,
             attributeFilter: ['style']
         });
-    })
+    });
 });
 </script>
     ]]
     meta.support_footer = pandoc.RawBlock("html",support_footer)
     return meta
 end
+

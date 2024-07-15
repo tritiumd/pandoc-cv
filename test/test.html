@@ -69,8 +69,12 @@
       text-align: justify;
   }
 
-  ul {
+  ul,ol {
       margin: 2mm 0;
+  }
+
+  li {
+      width: inherit;
   }
 
   #info > ul {
@@ -98,7 +102,6 @@
       width: 21cm;
       height: 29.7cm;
       display: block;
-      padding: 1.5cm;
       margin: 0.5cm auto;
       box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
       overflow: hidden;
@@ -108,6 +111,7 @@
   .container {
       width: 100%;
   }
+
 
   @page {
       size: A4;
@@ -140,20 +144,15 @@
           display: block;
       }
   }
-
-  @-moz-document url-prefix() {
-      @page {
-          margin: 1.5cm;;
-      }
-      @media print {
-          .A4 {
-              padding: 0;
-          }
-      }
-  }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
       
+  <style id="printing-support">
+    .A4{
+      padding: 0.5in
+    }
+  </style>
+  <style>
       </style>
 </head>
 <body>
@@ -292,7 +291,8 @@ Phòng Đào tạo trường Đại học Khoa học Tự nhiên</h5>
 <li><span class="fa fa-envelope"></span> example@example.com</li>
 </ul>
 </div>
-<div id="rendered" style="font-size: 11pt !important;
+<div id="rendered" style="
+    font-size: 11pt !important;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     line-height: 1.25;
@@ -375,6 +375,24 @@ Phòng Đào tạo trường Đại học Khoa học Tự nhiên</h5>
                     }
                 }
             }
+            if (navigator.userAgent.indexOf("Firefox") !== -1){
+                let margin = $(".A4").css("padding");
+                $("#printing-support").html(`
+                .A4 {
+                    padding: ${margin};
+                }
+                @-moz-document url-prefix() {
+                    @page {
+                        margin: ${margin};
+                    }
+                    @media print {
+                        .A4 {
+                            padding: 0;
+                        }
+                    }
+                }
+                `)
+            }
         }
 
         const render_html = function () {
@@ -387,8 +405,8 @@ Phòng Đào tạo trường Đại học Khoa học Tự nhiên</h5>
                 document.fonts.load("14pt 'Font Awesome 6 Free'"),
                 document.fonts.load("14pt 'Font Awesome 6 Brands'"),
             ]).then(load);
-        }
-
+        }    
+        
         render_html()
         $("#rerender").on("click", render_html);
         const observer = new MutationObserver(render_html);
@@ -402,7 +420,7 @@ Phòng Đào tạo trường Đại học Khoa học Tự nhiên</h5>
                 attributes: true,
                 attributeFilter: ['style']
             });
-        })
+        });
     });
     </script>
         

@@ -1,3 +1,10 @@
+---
+font-size: 11pt
+font-family: Montserrat
+font-weight: 500
+line-height: 1.25
+margin: 0.5in
+---
 # Phạm Bá Thắng
 
 ## Software Engineer

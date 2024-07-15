@@ -72,6 +72,24 @@ $(document).ready(function () {
                 }
             }
         }
+        if (navigator.userAgent.indexOf("Firefox") !== -1){
+            let margin = $(".A4").css("padding");
+            $("#printing-support").html(`
+            .A4 {
+                padding: ${margin};
+            }
+            @-moz-document url-prefix() {
+                @page {
+                    margin: ${margin};
+                }
+                @media print {
+                    .A4 {
+                        padding: 0;
+                    }
+                }
+            }
+            `)
+        }
     }
 
     const render_html = function () {
@@ -99,5 +117,5 @@ $(document).ready(function () {
             attributes: true,
             attributeFilter: ['style']
         });
-    })
+    });
 });
