@@ -1,3 +1,10 @@
+---
+font-size: $if(config.font-size)$$config.font-size$$else$11pt$endif$
+font-family: $if(config.font-family)$$config.font-family$$else$Montserrat$endif$
+font-weight: $if(config.font-weight)$$config.font-weight$$else$500$endif$
+line-height: $if(config.line-height)$$config.line-height$$else$1.25$endif$
+margin: $if(config.margin)$$config.margin$$else$0.5in$endif$
+---
 $if(name)$# $name$$endif$
 
 $if(position)$## $position$$endif$

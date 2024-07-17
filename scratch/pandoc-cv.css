@@ -56,8 +56,12 @@ p {
     text-align: justify;
 }
 
-ul {
+ul,ol {
     margin: 2mm 0;
+}
+
+li {
+    width: inherit;
 }
 
 #info > ul {
@@ -85,7 +89,6 @@ h5 + h5 + div {
     width: 21cm;
     height: 29.7cm;
     display: block;
-    padding: 1.5cm;
     margin: 0.5cm auto;
     box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     overflow: hidden;
@@ -126,16 +129,5 @@ h5 + h5 + div {
 
     .enable-print {
         display: block;
-    }
-}
-
-@-moz-document url-prefix() {
-    @page {
-        margin: 1.5cm;;
-    }
-    @media print {
-        .A4 {
-            padding: 0;
-        }
     }
 }

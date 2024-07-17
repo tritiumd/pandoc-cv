@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Pandoc-CV</title>
   $support_header$
+  <style id="printing-support">
+    .A4{
+      padding: $if(margin)$$margin$$else$0.5in$endif$
+    }
+  </style>
+  <style>
     $for(style)$
         $style$
     $endfor$
@@ -28,10 +34,11 @@ $endfor$
 <div id="data">
 $body$
 </div>
-<div id="rendered" style="font-size: 11pt !important;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    line-height: 1.25;
+<div id="rendered" style="
+    font-size: $if(font-size)$$font-size$$else$11pt$endif$ !important;
+    font-family: '$if(font-family)$$font-family$$else$Montserrat$endif$', sans-serif;
+    font-weight: $if(font-weight)$$font-weight$$else$500$endif$;
+    line-height: $if(line-height)$$line-height$$else$1.25$endif$;
 "></div>
 $for(include-after)$
 $include-after$
