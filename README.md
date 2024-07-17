@@ -35,6 +35,12 @@ Trong trường hợp không có Chrome, Firefox hoặc các trình duyệt dùn
 --user `id -u`:`id -g`
 ```
 
+**Trong trường hợp muốn nhanh**: Copy file `command.sh` trong folder `test` vào thư mục làm việc sau đó dùng lệnh sau để chuyển trực tiếp từ yaml sang html
+
+```bash
+ docker run --rm -v .:/workspace --entrypoint bash ngocptblaplafla/pandoc-texlive-full:latest command.sh
+```
+
 # Thêm
 
 Nêu muốn ngắt trang hãy paste đoạn này vào

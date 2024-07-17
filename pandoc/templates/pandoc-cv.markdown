@@ -64,19 +64,19 @@ $endfor$
 $endfor$
 $endif$
 
-$if(experiment)$
+$if(experience)$
 ### Kinh nghiệm làm việc
 
-$for(experiment)$
-#### $experiment.place$
+$for(experience)$
+#### $experience.place$
 
-$for(experiment.phase)$
-##### $experiment.phase.position$
+$for(experience.phase)$
+##### $experience.phase.position$
 
-###### $experiment.phase.time$
+###### $experience.phase.time$
 
-$for(experiment.phase.detail)$
-- $experiment.phase.detail$
+$for(experience.phase.detail)$
+- $experience.phase.detail$
 $endfor$
 
 $endfor$
