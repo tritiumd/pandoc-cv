@@ -1,0 +1,18 @@
+name: Test template
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: load template to init
+        run: |
+          cp pandoc/filters/* init
+          cp pandoc/templates/* init
+      - name: test yaml to markdown
+        run: docker run --rm --user `id -u`:`id -g` -v ./init:/workspace ngocptblaplafla/pandoc-texlive-full:latest --verbose --metadata-file vnframe.yaml --template pandoc-cv.markdown -o pandoc-cv.md
+      - name: test markdown to html
+        run: docker run --rm --user `id -u`:`id -g` -v ./init:/workspace ngocptblaplafla/pandoc-texlive-full:latest --verbose --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o pandoc-cv.html pandoc-cv.md
+      - name: test export pdf
+        run: docker run --rm -v .:/workspace --entrypoint chromium ngocptblaplafla/pandoc-texlive-full:latest  --headless --no-sandbox --run-all-compositor-stages-before-draw --virtual-time-budget=10000 --print-to-pdf=pandoc-cv.pdf pandoc-cv.html
