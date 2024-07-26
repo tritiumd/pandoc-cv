@@ -13,8 +13,6 @@ $if(info)$
 ::: {#info}
 $for(info)$
 - []{.fa .$info.icon$} $info.data$
-$sep$
-- \|
 $endfor$
 :::
 $endif$

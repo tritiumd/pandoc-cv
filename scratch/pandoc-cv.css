@@ -68,16 +68,26 @@ li {
     list-style: none;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
+    flex-direction: row;
     width: 100%;
     padding: 0;
     gap: 0.75mm
 }
 
 #info > ul > li {
-    display: inline;
-    flex-basis: fit-content;
+    flex-grow: 1;
+    flex-basis: auto;
+    text-align: center;
+    border-left: 1px solid #000;
+    width: fit-content;
+    padding-left: 2mm;
+    padding-right: 2mm
+}
+
+#info > ul > li:first-child {
+    border-left: none;
 }
 
 h5 + h5 + div {

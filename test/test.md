@@ -11,11 +11,8 @@ margin: 0.5in
 
 ::: {#info}
 - []{.fa .fa-cake-candles} 13/12/2002
-- \|
 - []{.fa .fa-phone} +84796421201
-- \|
 - []{.fa .fa-envelope} phambathanghp@gmail.com
-- \|
 - []{.fa .fab .fa-github} blaplafla13th
 :::
 
