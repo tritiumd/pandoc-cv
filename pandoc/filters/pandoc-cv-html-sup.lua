@@ -72,7 +72,7 @@ li {
     width: inherit;
 }
 
-#info > ul {
+.horizontal-list > ul {
     list-style: none;
     display: flex;
     align-items: center;
@@ -84,7 +84,7 @@ li {
     gap: 0.75mm
 }
 
-#info > ul > li {
+.horizontal-list > ul > li {
     flex-grow: 1;
     flex-basis: auto;
     text-align: center;
@@ -94,7 +94,7 @@ li {
     padding-right: 2mm
 }
 
-#info > ul > li:first-child {
+.horizontal-list > ul > li:first-child {
     border-left: none;
 }
 
