@@ -1,0 +1,1 @@
+echo "" | pandoc --data-dir /pandoc --metadata-file vnframe-adv.yaml --template default.markdown -L ./pandoc-cv-adv.lua -w markdown | pandoc --data-dir /pandoc --template pandoc-cv.html5 -L pandoc-cv-html-sup.lua -o test.html

@@ -1,0 +1,60 @@
+# config group
+config:
+  font-size: 11pt
+  font-family: Montserrat
+  font-weight: 500
+  line-height: 1.25
+  margin: 0.5cm
+  style: # for css
+    - '`<!--test-->`{=html}'
+  script: # for css
+    - '`<!--test-->`{=html}'
+# this yaml is mainly using for drag and drop gui not for personal use
+data:
+  header-info:
+    name: Your name
+    position: Appling Position
+  data-sections:
+    - name: Paragraph only
+      style: 0
+      data: A paragraph
+    - name: List only
+      style: 1
+      data:
+        - A list
+    - name: List only (horizontal)
+      style: 2
+      data:
+        - A list
+    - name: 2 info have left align and extra info below
+      style: 3
+      data:
+        - left-info: Info at left
+          right-info: Info at right
+          extra:
+            - Something
+    - name: 1 info have left align, 1 info have right align and extra info below
+      style: 4
+      data:
+        - left-info: Info at left
+          right-info: Info at right
+          extra:
+            - Something
+    - name: Group 2 info have left align and extra info below
+      style: 5
+      data:
+        - group: Group name
+          data:
+            - left-info: Info at left
+              right-info: Info at right
+              extra:
+                - Something
+    - name: Group 1 info have left align, 1 info have right align and extra info below
+      style: 6
+      data:
+        - group: Group name
+          data:
+            - left-info: Info at left
+              right-info: Info at right
+              extra:
+                - Something
