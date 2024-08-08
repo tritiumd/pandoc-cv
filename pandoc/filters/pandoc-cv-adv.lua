@@ -25,7 +25,7 @@ $data$
         ['1']=[[
 ### $name$
 
- $for(data)$
+$for(data)$
 - $data$
 $endfor$
 
@@ -102,6 +102,24 @@ $endfor$
 $endfor$
 $endfor$
         ]],
+        ['7']=[[
+### $name$
+
+$for(data)$
+- []{$data.icon-class$} $data.content$
+$endfor$
+
+]],
+        ['8']=[[
+### $name$
+
+::: {.horizontal-list}
+$for(data)$
+- []{$data.icon-class$} $data.content$
+$endfor$
+:::
+
+]]
     }
 
     for key,_ in pairs(template) do

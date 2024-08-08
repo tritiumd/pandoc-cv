@@ -58,3 +58,13 @@ data:
               right-info: Info at right
               extra:
                 - Something
+    - name: List with icon
+      style: 7
+      data:
+        - icon-class: .fa
+          content: a list
+    - name: List with icon (horizontal)
+      style: 8
+      data:
+        - icon-class: .fa
+          content: a list
