@@ -1,0 +1,64 @@
+# config group
+config:
+  font-size: 11pt
+  font-family: Montserrat
+  font-weight: 500
+  line-height: 1.25
+  margin: 0.5cm
+  style: # for css
+    - '`/*test*/`{=html}'
+  script: # for css
+    - '`<!--test-->`{=html}'
+# this yaml is mainly using for drag and drop gui not for personal use
+data:
+  header-info:
+    name: Thang Pham Ba
+    position: Software Engineer
+  data-sections:
+    - style: 8
+      data:
+        - icon-class: .fa .fa-cake-candles
+          content: 13/12/2002
+        - icon-class: .fa .fa-phone
+          content: "+84796421201"
+        - icon-class: .fa .fa-envelope
+          content: phambathanghp@gmail.com
+        - icon-class: .fa .fab .fa-github
+          content: blaplafla13th
+    - name: Summary
+      style: 0
+      data: As a student preparing to graduate in the field of computer science, with more than 2 years in the field of information technology, I want to use my knowledge and skills to develop products for the company, bringing practical value to the company as well as personal and career development
+    - name: Skills
+      style: 1
+      data:
+        - "Languages: Java, C#, Python, PHP, Javascript, Dart"
+        - "Database: PostgreSQL"
+        - "Object storage: Redis, MINIO"
+        - "DevOps: Docker, NGINX"
+        - "Microsoft Office: Word, Excel, PowerPoint"
+        - "Design: Photoshop, Illustrator, Figma"
+        - "Soft skills: Teamwork, presentations, problem solving, criticism"
+        - "English: Translating documents, writing documents, basic communication"
+    - name: Educations
+      style: 6
+      data:
+        - group: Hanoi University of Science - Vietnam National University, Hanoi
+          data:
+            - left-info: Computer Science
+              right-info: 2020-2024
+              extra:
+                - "GPA: 3.1"
+    - name: Certificate
+      style: 3
+      data:
+        - left-info: 2021
+          right-info: Student's research reward
+          extra:
+            - "Topic: Some technical solutions to optimize routing deployment using OSPF protocol"
+            - Third prize in the department-level poster subcommittee
+        - left-info: 2024
+          right-info: Student's research reward
+          extra:
+            - "Topic: Applying CNN in the process of predicting CYP2D6 pharmacological gene function"
+            - Second prize in the department-level information subcommittee
+            - Third prize at the Hanoi University of Sciences level
