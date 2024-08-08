@@ -11,19 +11,19 @@ end
 function Pandoc(doc)
     template={
         ['-1']=[[
-# $name$
+$if(name)$# $name$$endif$
 
-## $position$
+$if(position)$## $position$$endif$
 
 ]],
         ['0']=[[
-### $name$
+$if(name)$### $name$$endif$
 
-$data$
+$if(data)$$data$$endif$
 
 ]],
         ['1']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 $for(data)$
 - $data$
@@ -31,7 +31,7 @@ $endfor$
 
 ]],
         ['2']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 ::: {.horizontal-list}
 $for(data)$
@@ -41,12 +41,12 @@ $endfor$
 
 ]],
         ['3']=[[
-### $name$
-
+$if(name)$### $name$$endif$
 $for(data)$
-##### $data.left-info$
 
-##### $data.right-info$
+$if(data.left-info)$##### $data.left-info$$endif$
+
+$if(data.right-info)$##### $data.right-info$$endif$
 
 $for(data.extra)$
 - $data.extra$
@@ -54,12 +54,12 @@ $endfor$
 $endfor$
         ]],
         ['4']=[[
-### $name$
-
+$if(name)$### $name$$endif$
 $for(data)$
-##### $data.left-info$
 
-###### $data.right-info$
+$if(data.left-info)$##### $data.left-info$$endif$
+
+$if(data.right-info)$###### $data.right-info$$endif$
 
 $for(data.extra)$
 - $data.extra$
@@ -67,16 +67,16 @@ $endfor$
 $endfor$
         ]],
         ['5']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 $for(data)$
 
-#### $data.group$
-
+$if(data.group)$#### $data.group$$endif$
 $for(data.data)$
-##### $data.data.left-info$
 
-##### $data.data.right-info$
+$if(data.data.left-info)$##### $data.data.left-info$$endif$
+
+$if(data.data.right-info)$##### $data.data.right-info$$endif$
 
 $for(data.data.extra)$
 - $data.data.extra$
@@ -85,16 +85,16 @@ $endfor$
 $endfor$
         ]],
         ['6']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 $for(data)$
 
-#### $data.group$
-
+$if(data.group)$#### $data.group$$endif$
 $for(data.data)$
-##### $data.data.left-info$
 
-###### $data.data.right-info$
+$if(data.data.left-info)$##### $data.data.left-info$$endif$
+
+$if(data.data.right-info)$###### $data.data.right-info$$endif$
 
 $for(data.data.extra)$
 - $data.data.extra$
@@ -103,7 +103,7 @@ $endfor$
 $endfor$
         ]],
         ['7']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 $for(data)$
 - []{$data.icon-class$} $data.content$
@@ -111,7 +111,7 @@ $endfor$
 
 ]],
         ['8']=[[
-### $name$
+$if(name)$### $name$$endif$
 
 ::: {.horizontal-list}
 $for(data)$
