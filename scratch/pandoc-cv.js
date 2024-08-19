@@ -30,19 +30,24 @@ $(document).ready(function () {
         }
     }
 
-    function divload(div, temp_a4, container, layer,line_height,content_area, line_per_page) {
-        let container_temp = load_layer(container,layer);
+    function divload(div, temp_a4, container, layer, line_height, content_area, line_per_page) {
+        let container_temp = load_layer(container, layer);
         let elements = div.children();
-        let float = 0;
+        let temp_float_div = null;
         for (let i = 0; i < elements.length; i++) {
             let new_element = $(elements[i]).clone();
             container_temp.append(new_element);
-            if ($(elements[i]).css("float") !== "none" && $(new_element).is("h5,h6")) {
-                float += 1;
-            }
-            if (float === 2) {
-                float = 0;
-                container_temp.append($("<div></div>"));
+            if ($(elements[i]).is("h5,h6")) {
+                if (temp_float_div === null) {
+                    container.append("<div class='temp_float'></div>");
+                    temp_float_div=container.children().last();
+                }
+                temp_float_div.append(new_element);
+                if (temp_float_div.children().length > 1) {
+                    temp_float_div = null;
+                }
+            } else { 
+                temp_float_div = null; 
             }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
@@ -60,7 +65,7 @@ $(document).ready(function () {
                         if (container.height() > content_area) {
                             new_list.children().last().remove();
                             [temp_a4, container] = new_page(temp_a4);
-                            container_temp = load_layer(container,layer);
+                            container_temp = load_layer(container, layer);
                             j--;
                             new_list = $(`<${tag}></${tag}>`);
                             container_temp.append(new_list);
@@ -72,7 +77,7 @@ $(document).ready(function () {
                     let remaining = Math.floor((content_area - container.height()) / line_height);
                     if (remaining <= 0) {
                         [temp_a4, container] = new_page(temp_a4);
-                        container_temp = load_layer(container,layer)
+                        container_temp = load_layer(container, layer)
                         container_temp.append($(new_element))
                     } else {
                         container_temp.append($(new_element))
@@ -82,7 +87,7 @@ $(document).ready(function () {
                         line_start = remaining
                         while (line_start < line_end) {
                             [temp_a4, container] = new_page(temp_a4);
-                            container_temp = load_layer(container,layer)
+                            container_temp = load_layer(container, layer)
                             let bottom_part = $(new_element).clone();
                             container_temp.append(bottom_part);
                             bottom_part.css("margin-top", (-line_start * line_height) + "px");
@@ -99,10 +104,10 @@ $(document).ready(function () {
                     container_temp.children().last().remove();
                     let new_layer = layer.clone();
                     new_layer.append($(new_element));
-                    [temp_a4, container] = divload($(new_element), temp_a4, container, new_layer,line_height,content_area, line_per_page)
+                    [temp_a4, container] = divload($(new_element), temp_a4, container, new_layer, line_height, content_area, line_per_page)
                 } else {
                     [temp_a4, container] = new_page(temp_a4);
-                    container_temp = load_layer(container,layer)
+                    container_temp = load_layer(container, layer)
                     container_temp.append(new_element);
                 }
             }
@@ -118,16 +123,23 @@ $(document).ready(function () {
         const content_area = $(temp_a4).height() - 0.25 * parseFloat($(temp_a4).css("padding-bottom"));
         const line_per_page = content_area / line_height;
         let elements = data.children();
-        let float = 0
+        let temp_float_div = null;
         for (let i = 0; i < elements.length; i++) {
             let new_element = $(elements[i]).clone();
             container.append(new_element);
-            if ($(elements[i]).css("float") !== "none") {
-                float += 1;
-            }
-            if (float === 2) {
-                float = 0;
-                container.append($("<div></div>"))
+            if ($(elements[i]).is("h5,h6")) {
+                if (temp_float_div === null) {
+                    container.append("<div class='temp_float'></div>");
+                    temp_float_div=container.children().last();
+                    
+                
+                }console.log(temp_float_div.children().length)
+                temp_float_div.append(new_element);
+                if (temp_float_div.children().length > 1) {
+                    temp_float_div = null;
+                }
+            } else { 
+                temp_float_div = null; 
             }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
@@ -179,7 +191,7 @@ $(document).ready(function () {
                     }
                 } else if ($(new_element).is("div")) {
                     container.children().last().remove();
-                    [temp_a4, container] = divload($(new_element), temp_a4, container, [$(new_element)],line_height,content_area, line_per_page)
+                    [temp_a4, container] = divload($(new_element), temp_a4, container, [$(new_element)], line_height, content_area, line_per_page)
                 } else {
                     [temp_a4, container] = new_page(temp_a4);
                     container.append(new_element);
@@ -222,7 +234,7 @@ $(document).ready(function () {
     $("#rerender").on("click", render_html);
     const observer = new MutationObserver(render_html);
     data.each(function () {
-        observer.observe(this, {childList: true, characterData: true, attributes: false});
+        observer.observe(this, { childList: true, characterData: true, attributes: false });
     })
     rendered.each(function () {
         observer.observe(this, {

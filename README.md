@@ -14,8 +14,9 @@ Pandoc-CV: Template cv cho pandoc chuẩn ATS
 ``` bash
 docker run --rm -v .:/workspace ngocptblaplafla/pandoc-texlive-full:latest --metadata-file vnframe.yaml --template pandoc-cv.markdown -o pandoc-cv.md
 ```
+** Trong trường hợp các header quá dài và bị ngắt dòng, bạn thêm option `--warp none` ở cuối để không bị ngắt.
 
-**Bước 3**: Chỉnh sửa file `pandoc-cv.md` theo ý muốn  
+**Bước 3**: Chỉnh sửa file `pandoc-cv.md` theo ý muốn
 **Bước 4**: Xuất bản cv trước khi in
 
 ```bash

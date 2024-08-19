@@ -32,12 +32,15 @@ h5, h6 {
     font-size: 1em !important;
     display: block;
     margin: 0 0 1mm 14pt;
-    float: left;
 }
 
-h6 {
-    float: right;
-    text-align: right;
+.temp_float {
+    display: flex;
+    width: 100%;
+}
+
+.temp_float>h6 {
+    margin-left: auto;
 }
 
 #data {
@@ -57,7 +60,7 @@ p {
 }
 
 ul,ol {
-    margin: 2mm 0;
+    margin: 1mm 0;
 }
 
 li {
@@ -88,10 +91,6 @@ li {
 
 .horizontal-list > ul > li:first-child {
     border-left: none;
-}
-
-h5 + h5 + div {
-    height: 1mm;
 }
 
 .A4 {
