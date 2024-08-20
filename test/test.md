@@ -9,7 +9,7 @@ margin: 0.5in
 
 ## Software Engineer
 
-::: {#info}
+::: {.horizontal-list}
 - []{.fa .fa-cake-candles} 13/12/2002
 - []{.fa .fa-phone} +84796421201
 - []{.fa .fa-envelope} phambathanghp@gmail.com

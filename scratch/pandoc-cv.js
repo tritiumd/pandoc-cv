@@ -40,14 +40,14 @@ $(document).ready(function () {
             if ($(elements[i]).is("h5,h6")) {
                 if (temp_float_div === null) {
                     container.append("<div class='temp_float'></div>");
-                    temp_float_div=container.children().last();
+                    temp_float_div = container.children().last();
                 }
                 temp_float_div.append(new_element);
                 if (temp_float_div.children().length > 1) {
                     temp_float_div = null;
                 }
-            } else { 
-                temp_float_div = null; 
+            } else {
+                temp_float_div = null;
             }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
@@ -130,16 +130,14 @@ $(document).ready(function () {
             if ($(elements[i]).is("h5,h6")) {
                 if (temp_float_div === null) {
                     container.append("<div class='temp_float'></div>");
-                    temp_float_div=container.children().last();
-                    
-                
-                }console.log(temp_float_div.children().length)
+                    temp_float_div = container.children().last();
+                }
                 temp_float_div.append(new_element);
                 if (temp_float_div.children().length > 1) {
                     temp_float_div = null;
                 }
-            } else { 
-                temp_float_div = null; 
+            } else {
+                temp_float_div = null;
             }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
@@ -221,8 +219,7 @@ $(document).ready(function () {
     const render_html = function () {
         rendered.html("");
         // https://css-tricks.com/the-best-font-loading-strategies-and-how-to-execute-them/#aa-fout-vs-fout-with-class
-        let font_waiting = rendered.css("font-weight") + " " + rendered.css("font-size")
-            + " " + rendered.css("font-family")
+        let font_waiting = rendered.css("font-size") + " " + rendered.css("font-family")
         Promise.all([
             document.fonts.load(font_waiting),
             document.fonts.load("14pt 'Font Awesome 6 Free'"),
@@ -230,11 +227,9 @@ $(document).ready(function () {
         ]).then(load);
     }
 
-    render_html()
-    $("#rerender").on("click", render_html);
     const observer = new MutationObserver(render_html);
     data.each(function () {
-        observer.observe(this, { childList: true, characterData: true, attributes: false });
+        observer.observe(this, {childList: true, characterData: true, attributes: false});
     })
     rendered.each(function () {
         observer.observe(this, {
@@ -244,4 +239,46 @@ $(document).ready(function () {
             attributeFilter: ['style']
         });
     });
+
+    // button and input for customize in support bar
+    $("#rerender").on("click", render_html);
+    let font_builtin = {
+        "Serif": ["EB Garamond", "Merriweather", "Noto Serif", "Times New Roman", "serif"],
+        "Sans-serif": ["Arial", "Inter", "Montserrat", "Noto Sans", "sans-serif"],
+        "Monospace": ["JetBrains Mono", "Inconsolata", "Reddit Mono", "monospace"],
+    }
+    const font_selector = $("#font-selector");
+    const font_family = $("#font-family");
+    for (let [key, value] of Object.entries(font_builtin)) {
+        let optgroup = $(`<optgroup label="${key}"></optgroup>`);
+        for (let font of value) {
+            optgroup.append(`<option value="${font}" style="font-family: ${font}">${font}</option>`);
+            if (rendered.css("font-family").includes(font)) {
+                optgroup.children().last().prop("selected", true);
+            }
+        }
+        font_selector.append(optgroup);
+    }
+    font_selector.select2({tags: true,width: 'resolve',selectionCssClass:"font-selector"});
+    font_selector.on("change", function () {
+        rendered.css("font-family", $(this).val());
+    });
+    let start_val = rendered.attr("style");
+    const font_size = $("#font-size");
+    font_size.val(parseFloat(start_val.match(/(\d*(.\d*)?)pt/g)[0]));
+    font_size.on("change", function () {
+        rendered.css("font-size", $(this).val() + "pt");
+    });
+    const font_weight = $("#font-weight");
+    font_weight.val(rendered.css("font-weight"));
+    font_weight.on("change", function () {
+        rendered.css("font-weight", $(this).val());
+    });
+    const line_height = $("#line-height");
+    line_height.val(parseFloat((new RegExp(/line-height:\s?(\d*(.\d*))/)).exec(start_val)[1]));
+    line_height.on("change", function () {
+        rendered.css("line-height", $(this).val());
+    });
+
+    render_html();
 });
