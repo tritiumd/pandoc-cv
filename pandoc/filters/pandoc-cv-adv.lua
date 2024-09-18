@@ -136,8 +136,10 @@ $endfor$
     table.insert(body,pandoc.RawBlock('markdown',compiled))
     -- compile data sections
     for _,i in ipairs(data['data-sections']) do
-        compiled = pandoc.write(pandoc.Pandoc({}, i),
-                'markdown', {template = template[stringify(i['style'])]})
+        compiled = pandoc.write(pandoc.Pandoc({}, i), 'markdown', {
+            template = template[stringify(i['style'])],
+            wrap_text = "wrap-none"
+        })
         table.insert(body,pandoc.RawBlock('markdown',compiled))
     end
     return pandoc.Pandoc(body,meta)
