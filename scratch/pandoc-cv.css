@@ -123,8 +123,8 @@ li {
     .A4 {
         box-shadow: none;
         margin: 0;
-        width: auto;
-        height: auto;
+        /*width: auto;*/
+        /*height: auto;*/
     }
 
     .page-break {

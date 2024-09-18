@@ -2,6 +2,13 @@ $(document).ready(function () {
     const data = $("#data");
     const rendered = $("#rendered");
 
+    function getPPI() {
+        let div = $("<div>").css("width", "1in").appendTo("body");
+        let ppi = window.getComputedStyle(div[0], null).getPropertyValue('width');
+        div.remove();
+        return parseFloat(ppi);
+    }
+
     function new_page(temp_a4) {
         let container = $('<div class="container"></div>');
         if (temp_a4 == null) {
@@ -27,6 +34,29 @@ $(document).ready(function () {
                 container = container_temp
             }
             return container
+        }
+    }
+
+    function printing_support(margin) {
+        $("#printing-support").html(`
+            .A4 {
+                padding: ${margin};
+            }`)
+        if (navigator.userAgent.indexOf("Firefox") !== -1) {
+            $("#printing-support").append(`
+            @-moz-document url-prefix() {
+                @page {
+                    margin: ${margin};
+                }
+                @media print {
+                    .A4 {
+                        padding: 0;
+                        height:auto;
+                        width:auto;
+                    }
+                }
+            }
+            `)
         }
     }
 
@@ -136,8 +166,16 @@ $(document).ready(function () {
                 if (temp_float_div.children().length > 1) {
                     temp_float_div = null;
                 }
+                if (container.height() > 0.95*content_area) {
+                    [temp_a4, container] = new_page(temp_a4);
+                    container.append(temp_float_div);
+                }
             } else {
                 temp_float_div = null;
+            }
+            if ($(elements[i]).is("h3,h4") && container.height() > 0.95*content_area) {
+                [temp_a4, container] = new_page(temp_a4);
+                container.append(new_element);
             }
             if ($(elements[i]).hasClass("page-break")) {
                 container.children().last().remove();
@@ -154,6 +192,9 @@ $(document).ready(function () {
                         new_list.append(lis[j]);
                         if (container.height() > content_area) {
                             new_list.children().last().remove();
+                            if (new_list.children().length === 0) {
+                                new_list.remove();
+                            }
                             [temp_a4, container] = new_page(temp_a4);
                             j--;
                             new_list = $(`<${tag}></${tag}>`);
@@ -196,24 +237,7 @@ $(document).ready(function () {
                 }
             }
         }
-        if (navigator.userAgent.indexOf("Firefox") !== -1) {
-            let margin = $(".A4").css("padding");
-            $("#printing-support").html(`
-            .A4 {
-                padding: ${margin};
-            }
-            @-moz-document url-prefix() {
-                @page {
-                    margin: ${margin};
-                }
-                @media print {
-                    .A4 {
-                        padding: 0;
-                    }
-                }
-            }
-            `)
-        }
+        printing_support($(".A4").css("padding"));
     }
 
     const render_html = function () {
@@ -259,7 +283,7 @@ $(document).ready(function () {
         }
         font_selector.append(optgroup);
     }
-    font_selector.select2({tags: true,width: 'resolve',selectionCssClass:"font-selector"});
+    font_selector.select2({tags: true, width: 'resolve', selectionCssClass: "font-selector"});
     font_selector.on("change", function () {
         rendered.css("font-family", $(this).val());
     });
@@ -279,6 +303,11 @@ $(document).ready(function () {
     line_height.on("change", function () {
         rendered.css("line-height", $(this).val());
     });
-
+    const margin = $("#margin");
+    margin.val($("#printing-support").html().match(/padding:\s?(\d*(.\d*)\w*)/)[1]);
+    margin.on("change", function () {
+        printing_support($(this).val());
+        render_html()
+    });
     render_html();
 });
