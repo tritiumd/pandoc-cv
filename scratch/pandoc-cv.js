@@ -102,6 +102,7 @@ $(document).ready(function () {
                         }
                         j++;
                     }
+
                 } else if ($(new_element).is("p")) {
                     container_temp.children().last().remove();
                     let remaining = Math.floor((content_area - container.height()) / line_height);
@@ -166,14 +167,38 @@ $(document).ready(function () {
                 if (temp_float_div.children().length > 1) {
                     temp_float_div = null;
                 }
-                if (container.height() > 0.95*content_area) {
+                if (container.height() > 0.95 * content_area) {
                     [temp_a4, container] = new_page(temp_a4);
                     container.append(temp_float_div);
                 }
             } else {
                 temp_float_div = null;
             }
-            if ($(elements[i]).is("h3,h4") && container.height() > 0.95*content_area) {
+            if ($(new_element).hasClass("horizontal-list")) {
+                for (let j = 0; j < new_element.children().length; j++) {
+                    child = new_element.children()[j];
+                    if ($(child).is("ul,ol")) {
+                        let num_lines = Math.round($(child).outerHeight(true) / line_height);
+                        let tag = $(child).prop("tagName");
+                        if (num_lines >= 2) {
+                            let lis = $(child).children()
+                            let items_per_ul = Math.ceil(lis.length / num_lines);
+                            let last_elements = $(child);
+                            let k = 0
+                            while (k < lis.length) {
+                                let new_list = $(`<${tag}></${tag}>`);
+                                for (let l = 0; l < items_per_ul && k < lis.length; l++) {
+                                    new_list.append(lis[k++]);
+                                }
+                                last_elements.after($(new_list));
+                                last_elements = new_list
+                            }
+                            child.remove()
+                        }
+                    }
+                }
+            }
+            if ($(elements[i]).is("h3,h4") && container.height() > 0.95 * content_area) {
                 [temp_a4, container] = new_page(temp_a4);
                 container.append(new_element);
             }
@@ -253,7 +278,7 @@ $(document).ready(function () {
 
     const observer = new MutationObserver(render_html);
     data.each(function () {
-        observer.observe(this, {childList: true, characterData: true, attributes: false});
+        observer.observe(this, { childList: true, characterData: true, attributes: false });
     })
     rendered.each(function () {
         observer.observe(this, {
@@ -263,51 +288,82 @@ $(document).ready(function () {
             attributeFilter: ['style']
         });
     });
+    // Check if the page is not in an iframe
+    if (window.self === window.top) {
+        // Create and show the support bar only if not in an iframe
+        const supportBarHtml = `
+            <div id="support-bar" class="noprint">
+                <input type="button" value="Print/Save PDF" onClick="window.print()">
+                <input type="button" value="Rerender" id="rerender">
+                <div id="font-family-selector">
+                    <label for="font-selector">Font family:</label>
+                    <select id="font-selector"></select>
+                </div>
+                <div id="font-weight-adjust">
+                    <label for="font-weight">Font weight:</label>
+                    <input type="number" id="font-weight" min="100" max="900" step="100">
+                </div>
+                <div id="line-height-adjust">
+                    <label for="line-height">Line height:</label>
+                    <input type="number" id="line-height" min="1" max="2" step="0.1">
+                </div>
+                <div id="font-size-adjust">
+                    <label for="font-size">Font size:</label>
+                    <input type="number" id="font-size" min="8" max="16" step="0.25">pt
+                </div>
+                <div id="margin-adjust">
+                    <label for="margin">Margin:</label>
+                    <input type="text" id="margin">
+                </div>
+            </div>
+        `;
+        $("body").prepend(supportBarHtml);
 
-    // button and input for customize in support bar
-    $("#rerender").on("click", render_html);
-    let font_builtin = {
-        "Serif": ["EB Garamond", "Merriweather", "Noto Serif", "Times New Roman", "serif"],
-        "Sans-serif": ["Arial", "Inter", "Montserrat", "Noto Sans", "sans-serif"],
-        "Monospace": ["JetBrains Mono", "Inconsolata", "Reddit Mono", "monospace"],
-    }
-    const font_selector = $("#font-selector");
-    const font_family = $("#font-family");
-    for (let [key, value] of Object.entries(font_builtin)) {
-        let optgroup = $(`<optgroup label="${key}"></optgroup>`);
-        for (let font of value) {
-            optgroup.append(`<option value="${font}" style="font-family: ${font}">${font}</option>`);
-            if (rendered.css("font-family").includes(font)) {
-                optgroup.children().last().prop("selected", true);
-            }
+        // Initialize support bar functionality
+        $("#rerender").on("click", render_html);
+        let font_builtin = {
+            "Serif": ["EB Garamond", "Merriweather", "Noto Serif", "Times New Roman", "serif"],
+            "Sans-serif": ["Arial", "Inter", "Montserrat", "Noto Sans", "sans-serif"],
+            "Monospace": ["JetBrains Mono", "Inconsolata", "Reddit Mono", "monospace"],
         }
-        font_selector.append(optgroup);
+        const font_selector = $("#font-selector");
+        const font_family = $("#font-family");
+        for (let [key, value] of Object.entries(font_builtin)) {
+            let optgroup = $(`<optgroup label="${key}"></optgroup>`);
+            for (let font of value) {
+                optgroup.append(`<option value="${font}" style="font-family: ${font}">${font}</option>`);
+                if (rendered.css("font-family").includes(font)) {
+                    optgroup.children().last().prop("selected", true);
+                }
+            }
+            font_selector.append(optgroup);
+        }
+        font_selector.select2({ tags: true, width: 'resolve', selectionCssClass: "font-selector" });
+        font_selector.on("change", function () {
+            rendered.css("font-family", $(this).val());
+        });
+        let start_val = rendered.attr("style");
+        const font_size = $("#font-size");
+        font_size.val(parseFloat(start_val.match(/(\d*(.\d*)?)pt/g)[0]));
+        font_size.on("change", function () {
+            rendered.css("font-size", $(this).val() + "pt");
+        });
+        const font_weight = $("#font-weight");
+        font_weight.val(rendered.css("font-weight"));
+        font_weight.on("change", function () {
+            rendered.css("font-weight", $(this).val());
+        });
+        const line_height = $("#line-height");
+        line_height.val(parseFloat((new RegExp(/line-height:\s?(\d*(.\d*))/)).exec(start_val)[1]));
+        line_height.on("change", function () {
+            rendered.css("line-height", $(this).val());
+        });
+        const margin = $("#margin");
+        margin.val($("#printing-support").html().match(/padding:\s?(\d*(.\d*)\w*)/)[1]);
+        margin.on("change", function () {
+            printing_support($(this).val());
+            render_html()
+        });
     }
-    font_selector.select2({tags: true, width: 'resolve', selectionCssClass: "font-selector"});
-    font_selector.on("change", function () {
-        rendered.css("font-family", $(this).val());
-    });
-    let start_val = rendered.attr("style");
-    const font_size = $("#font-size");
-    font_size.val(parseFloat(start_val.match(/(\d*(.\d*)?)pt/g)[0]));
-    font_size.on("change", function () {
-        rendered.css("font-size", $(this).val() + "pt");
-    });
-    const font_weight = $("#font-weight");
-    font_weight.val(rendered.css("font-weight"));
-    font_weight.on("change", function () {
-        rendered.css("font-weight", $(this).val());
-    });
-    const line_height = $("#line-height");
-    line_height.val(parseFloat((new RegExp(/line-height:\s?(\d*(.\d*))/)).exec(start_val)[1]));
-    line_height.on("change", function () {
-        rendered.css("line-height", $(this).val());
-    });
-    const margin = $("#margin");
-    margin.val($("#printing-support").html().match(/padding:\s?(\d*(.\d*)\w*)/)[1]);
-    margin.on("change", function () {
-        printing_support($(this).val());
-        render_html()
-    });
     render_html();
 });

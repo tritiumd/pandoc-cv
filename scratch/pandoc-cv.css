@@ -93,6 +93,10 @@ li {
     border-left: none;
 }
 
+.horizontal-list > ul:has(li:nth-child(2):last-child) > li {
+    border-left: none;
+}
+
 .A4 {
     background: white;
     width: 21cm;
